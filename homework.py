@@ -61,9 +61,8 @@ class Training:
 
 class Running(Training):
     """Тренировка: бег."""
-    WORKOUT_TYPE = 'RUN'
-    CF_RUN_1 = 18  # calorie coefficient while running
-    CF_RUN_2 = 20
+    CALORIES_RUN_MULTIPLIER: float = 18
+    CALORIES_RUN_SHIFT: float = 20
 
     def __init__(self,
                  action: int,
@@ -73,17 +72,16 @@ class Running(Training):
         super().__init__(action, duration, weight)
 
     def get_spent_calories(self) -> float:
-        spent_calories = ((self.CF_RUN_1 * self.get_mean_speed()
-                          - self.CF_RUN_2) * self.weight / self.M_IN_KM
-                          * (self.duration * self.MIN_IN_H))
+        spent_calories: float = ((self.CALORIES_RUN_MULTIPLIER * self.get_mean_speed()
+                                 - self.CALORIES_RUN_SHIFT) * self.weight / self.M_IN_KM
+                                 * (self.duration * self.MIN_IN_H))
         return spent_calories
 
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
-    WORKOUT_TYPE = 'WLK'
-    CF_WLK_1 = 0.035  # calorie coefficient while sportswalking
-    CF_WLK_2 = 0.029
+    CALORIES_SPWALKING_MULTIPLIER: float = 0.035
+    CALORIES_SPWALKING_SHIFT: float = 0.029
 
     def __init__(self,
                  action: int,
@@ -95,19 +93,18 @@ class SportsWalking(Training):
         self.height = height
 
     def get_spent_calories(self) -> float:
-        spent_calories = ((self.CF_WLK_1 * self.weight
-                          + (self.get_mean_speed()**2 // self.height)
-                          * self.CF_WLK_2 * self.weight)
-                          * self.duration * self.MIN_IN_H)
+        spent_calories: float = ((self.CALORIES_SPWALKING_MULTIPLIER * self.weight
+                                 + (self.get_mean_speed()**2 // self.height)
+                                 * self.CALORIES_SPWALKING_SHIFT * self.weight)
+                                 * self.duration * self.MIN_IN_H)
         return spent_calories
 
 
 class Swimming(Training):
     """Тренировка: плавание."""
-    WORKOUT_TYPE = 'SWM'
-    LEN_STEP = 1.38  # length of one stroke
-    CF_SWM_1 = 1.1  # calorie coefficient while swimming
-    CF_SWM_2 = 2
+    LEN_STEP: float = 1.38
+    CALORIES_SWIM_MULTIPLIER: float = 1.1
+    CALORIES_SWIM_SHIFT: float = 2
 
     def __init__(self,
                  action: int,
@@ -121,13 +118,13 @@ class Swimming(Training):
         self.count_pool = count_pool
 
     def get_mean_speed(self) -> float:
-        avg_speed = (self.length_pool * self.count_pool
-                     / self.M_IN_KM / self.duration)
+        avg_speed: float = (self.length_pool * self.count_pool
+                            / self.M_IN_KM / self.duration)
         return avg_speed
 
     def get_spent_calories(self) -> float:
-        spent_calories = ((self.get_mean_speed() + self.CF_SWM_1)
-                          * self.CF_SWM_2 * self.weight)
+        spent_calories: float = ((self.get_mean_speed() + self.CALORIES_SWIM_MULTIPLIER)
+                                 * self.CALORIES_SWIM_SHIFT * self.weight)
         return spent_calories
 
 
